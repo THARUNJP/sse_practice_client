@@ -1,73 +1,150 @@
-# React + TypeScript + Vite
+# SSE in React — Practical Mastery Checklist
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Goal: Master **Server-Sent Events (SSE)** in a **React application** using correct lifecycle management, user scoping, authentication, and cleanup.
 
-Currently, two official plugins are available:
+Only production-relevant tasks. No demos.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Tech Stack
+- React
+- JavaScript / TypeScript
+- EventSource API
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Core Rule (Read First)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- SSE connection **MUST be created and closed inside React lifecycle**
+- Never create EventSource outside `useEffect`
+- Always clean up on unmount
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+If you violate this, your app will leak connections.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## LEVEL 1 — Single Global Stream
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Purpose: Understand SSE behavior in React.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Tasks
+- [ ] Create SSE connection inside `useEffect`
+- [ ] Store EventSource in `useRef`
+- [ ] Handle `onmessage`
+- [ ] Update React state from stream
+- [ ] Verify multiple tabs receive same data
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Outcome:  
+You understand how SSE interacts with React rendering.
+
+---
+
+## LEVEL 2 — Lifecycle & Cleanup (Critical)
+
+Purpose: Prevent duplicate streams.
+
+### Tasks
+- [ ] Close EventSource in cleanup function
+- [ ] Ensure connection is created only once
+- [ ] Confirm no duplicate connections on re-render
+- [ ] Verify backend sees disconnect
+
+Outcome:  
+You won’t leak streams on re-renders or navigation.
+
+---
+
+## LEVEL 3 — Structured Data (Real Payloads)
+
+Purpose: Handle real application data.
+
+### Tasks
+- [ ] Receive JSON payload
+- [ ] Parse safely
+- [ ] Update state immutably
+- [ ] Handle malformed data
+
+Outcome:  
+You can stream real-time app state.
+
+---
+
+## LEVEL 4 — User-Scoped Streams (Most Important)
+
+Purpose: Ensure data isolation.
+
+### Tasks
+- [ ] Pass userId when creating EventSource
+- [ ] Scope UI updates to that user
+- [ ] Open two users in different tabs
+- [ ] Confirm no data leakage
+
+Outcome:  
+You can build notifications, feeds, dashboards.
+
+---
+
+## LEVEL 5 — Auth-Aware SSE
+
+Purpose: Secure the connection.
+
+### Tasks
+- [ ] Use cookie-based auth (preferred)
+- [ ] Handle 401 / auth failure
+- [ ] Show auth error state in UI
+- [ ] Reconnect after login/token refresh
+
+Outcome:  
+You understand SSE auth constraints in browsers.
+
+---
+
+## LEVEL 6 — Reconnect Control
+
+Purpose: Avoid broken UX on network issues.
+
+### Tasks
+- [ ] Detect disconnect via `onerror`
+- [ ] Prevent multiple EventSource instances
+- [ ] Implement manual reconnect logic
+- [ ] Display connection status
+
+Outcome:  
+Your SSE survives real networks.
+
+---
+
+## LEVEL 7 — Performance & Safety
+
+Purpose: Production readiness.
+
+### Tasks
+- [ ] One SSE connection per user
+- [ ] Close stream on logout
+- [ ] Close stream on route change
+- [ ] Avoid storing EventSource in state
+
+Outcome:  
+Your app won’t melt under load.
+
+---
+
+## Required Implementation Pattern
+
+```ts
+useEffect(() => {
+  const es = new EventSource(url);
+  eventSourceRef.current = es;
+
+  es.onmessage = (e) => {
+    setData(JSON.parse(e.data));
+  };
+
+  es.onerror = () => {
+    es.close();
+  };
+
+  return () => {
+    es.close();
+  };
+}, []);
