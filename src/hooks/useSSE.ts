@@ -19,6 +19,7 @@ export default function useSSE() {
     eventSource.addEventListener("heartbeat", (e) => {
       const { data } = e;
       setHeartBeat(data);
+      console.log(data, "/heart");
     });
 
     eventSource.onerror = (err: unknown) => {
