@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 export default function useSSE() {
   const [count, setCount] = useState<number>(0);
+  const [haertBeat, setHeartBeat] = useState<"alive" | "dead">("dead");
 
   useEffect(() => {
     const eventSource = new EventSource("http://localhost:8000/events");
@@ -12,7 +13,12 @@ export default function useSSE() {
 
     eventSource.addEventListener("counter", (e) => {
       const { count } = JSON.parse(e.data);
-      setCount(count)
+      setCount(count);
+    });
+
+    eventSource.addEventListener("heartbeat", (e) => {
+      const { data } = e;
+      setHeartBeat(data);
     });
 
     eventSource.onerror = (err: unknown) => {
@@ -24,5 +30,5 @@ export default function useSSE() {
     };
   }, []);
 
-  return { count };
+  return { count, haertBeat };
 }
