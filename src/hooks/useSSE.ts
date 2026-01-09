@@ -14,6 +14,9 @@ export default function useSSE() {
     eventSource.addEventListener("counter", (e) => {
       const { count } = JSON.parse(e.data);
       setCount(count);
+      const lastEventId = e.lastEventId;
+      console.log(lastEventId,"id");
+      
     });
 
     eventSource.addEventListener("heartbeat", (e) => {
