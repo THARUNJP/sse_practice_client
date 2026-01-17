@@ -1,18 +1,17 @@
-import React from "react";
-import useSSE from "./hooks/useSSE";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
-  const { count, haertBeat } = useSSE();
-
   return (
-    <React.Fragment>
-      <h1 className="flex justify-center font-bold text-5xl">
-        Counter:{count}
-      </h1>
-      <h1 className="flex justify-center font-bold text-5xl mt-10">
-        Heart:{haertBeat}
-      </h1>
-    </React.Fragment>
+    <BrowserRouter>
+      <Routes>
+        {/* <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} /> */}
+
+        {/* Catch-all route */}
+        {/* <Route path="*" element={<NotFound />} /> */}
+      </Routes>
+    </BrowserRouter>
   );
 }
 
