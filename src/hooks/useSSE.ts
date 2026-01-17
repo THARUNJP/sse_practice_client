@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 export default function useSSE() {
   const [count, setCount] = useState<number>(0);
   const [haertBeat, setHeartBeat] = useState<"alive" | "dead">("dead");
-  const [remeberCount,setRememberCount] = useState<number>(0)
 
   useEffect(() => {
     const eventSource = new EventSource("http://localhost:8000/events");
