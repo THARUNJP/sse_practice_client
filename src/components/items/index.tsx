@@ -27,24 +27,24 @@ export default function ItemList() {
         <table className="border border-gray-300 w-3/4 text-left">
           <thead className="bg-gray-100">
             <tr>
-              <th className="border px-4 py-2">ID</th>
-              <th className="border px-4 py-2">Name</th>
-              <th className="border px-4 py-2">Price</th>
-              <th className="border px-4 py-2">quantity</th>
-              <th className="border px-4 py-2">category</th>
-              <th className="border px-4 py-2">brand</th>
+              <th className="border px-4 py-4">ID</th>
+              <th className="border px-4 py-4">Name</th>
+              <th className="border px-4 py-4">Price</th>
+              <th className="border px-4 py-4">quantity</th>
+              <th className="border px-4 py-4">category</th>
+              <th className="border px-4 py-4">brand</th>
             </tr>
           </thead>
 
           <tbody>
             {items?.map((item: Item) => (
               <tr key={item.id} className="hover:bg-gray-50">
-                <td className="border px-4 py-2">{item.id}</td>
-                <td className="border px-4 py-2">{item.name}</td>
-                <td className="border px-4 py-2">{item.price}</td>
-                <td className="border px-4 py-2">{item.quantity}</td>
-                <td className="border px-4 py-2">{item.category}</td>
-                <td className="border px-4 py-2">{item.brand}</td>
+                <td className="border px-4 py-4">{item.id}</td>
+                <td className="border px-4 py-4">{item.name}</td>
+                <td className="border px-4 py-4">{item.price}</td>
+                <td className="border px-4 py-4">{item.quantity}</td>
+                <td className="border px-4 py-4">{item.category}</td>
+                <td className="border px-4 py-4">{item.brand}</td>
               </tr>
             ))}
           </tbody>
