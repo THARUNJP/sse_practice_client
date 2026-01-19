@@ -10,7 +10,7 @@ export default function ItemList() {
 
   async function getItems() {
     try {
-      const response = await ItemService.get();
+      const response = await ItemService.get(1, 16);
       setItems(response?.data);
     } catch (err) {
       console.log("err in the get Items", err);
@@ -22,34 +22,20 @@ export default function ItemList() {
       <h1 className="flex justify-center text-red-500 font-bold text-3xl mb-4">
         Item List
       </h1>
-
-      <div className="flex justify-center">
-        <table className="border border-gray-300 w-3/4 text-left">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="border px-4 py-4">ID</th>
-              <th className="border px-4 py-4">Name</th>
-              <th className="border px-4 py-4">Price</th>
-              <th className="border px-4 py-4">quantity</th>
-              <th className="border px-4 py-4">category</th>
-              <th className="border px-4 py-4">brand</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {items?.map((item: Item) => (
-              <tr key={item.id} className="hover:bg-gray-50">
-                <td className="border px-4 py-4">{item.id}</td>
-                <td className="border px-4 py-4">{item.name}</td>
-                <td className="border px-4 py-4">{item.price}</td>
-                <td className="border px-4 py-4">{item.quantity}</td>
-                <td className="border px-4 py-4">{item.category}</td>
-                <td className="border px-4 py-4">{item.brand}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <main>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 m-5">
+          {items?.map((e: Item) => (
+            <div key={e.id} className="bg-gray-300 p-6 rounded-md shadow-sm">
+              <h2 className="font-bold text-lg mb-2">{e.name}</h2>
+              <p className="text-sm">ID: {e.id}</p>
+              <p className="text-sm">Category: {e.category}</p>
+              <p className="text-sm">Brand: {e.brand}</p>
+              <p className="text-sm">Quantity: {e.quantity}</p>
+              <p className="font-semibold mt-3">Price: ₹{e.price}</p>
+            </div>
+          ))}
+        </div>
+      </main>
     </>
   );
 }
