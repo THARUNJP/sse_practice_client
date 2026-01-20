@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import * as ItemService from "../../service/item.service";
 import type { Item } from "../../types/types";
+import { useInfiniteScroll } from "../../hooks/infiniteScroll";
 
 export default function ItemList() {
   const [items, setItems] = useState<Item[]>();
+
   useEffect(() => {
     getItems();
   }, []);
-
+useInfiniteScroll();
   async function getItems() {
     try {
       const response = await ItemService.get(1, 16);
