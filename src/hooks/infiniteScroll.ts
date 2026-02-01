@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 const options = {
   root: null, // use the document's viewport as the root
   rootMargin: "0px", // no margin
-  threshold: 1, //
+  threshold: 0.7, //
 };
 export function useInfiniteScroll(onLoadMore: any) {
   const loaderRef = useRef(null);
