@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as ItemService from "../../service/item.service";
 import type { Item } from "../../types/types";
 import { useInfiniteScroll } from "../../hooks/infiniteScroll";
@@ -9,10 +9,10 @@ export default function ItemList() {
   useEffect(() => {
     getItems();
   }, []);
-useInfiniteScroll();
+  const loaderRef = useInfiniteScroll(getItems);
   async function getItems() {
     try {
-      const response = await ItemService.get(1, 16);
+      const response = await ItemService.get(0, 16);
       setItems(response?.data);
     } catch (err) {
       console.log("err in the get Items", err);
@@ -20,7 +20,7 @@ useInfiniteScroll();
   }
 
   return (
-    <>
+    <div ref={loaderRef}>
       <h1 className="flex justify-center text-red-500 font-bold text-3xl mb-4">
         Item List
       </h1>
@@ -38,6 +38,6 @@ useInfiniteScroll();
           ))}
         </div>
       </main>
-    </>
+    </div>
   );
 }
