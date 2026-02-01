@@ -5,6 +5,7 @@ import { useInfiniteScroll } from "../../hooks/infiniteScroll";
 
 export default function ItemList() {
   const [items, setItems] = useState<Item[]>();
+  const [cursor,setCursor] = useState<number>(0)
 
   useEffect(() => {
     getItems();
@@ -12,7 +13,7 @@ export default function ItemList() {
   const loaderRef = useInfiniteScroll(getItems);
   async function getItems() {
     try {
-      const response = await ItemService.get(0, 16);
+      const response = await ItemService.get(cursor, 16);
       setItems(response?.data);
     } catch (err) {
       console.log("err in the get Items", err);
@@ -20,7 +21,7 @@ export default function ItemList() {
   }
 
   return (
-    <div ref={loaderRef}>
+    <div ref={loaderRef} className="h-screen">
       <h1 className="flex justify-center text-red-500 font-bold text-3xl mb-4">
         Item List
       </h1>
