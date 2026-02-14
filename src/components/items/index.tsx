@@ -21,7 +21,7 @@ export default function ItemList() {
   }
 
   return (
-    <div ref={loaderRef} className="h-screen">
+    <div className="min-h-screen pb-20">
       <h1 className="flex justify-center text-red-500 font-bold text-3xl mb-4">
         Item List
       </h1>
@@ -39,6 +39,7 @@ export default function ItemList() {
           ))}
         </div>
       </main>
+      <div ref={loaderRef} className="h-1" />
     </div>
   );
 }
