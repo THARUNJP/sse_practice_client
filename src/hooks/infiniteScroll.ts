@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 const options = {
   root: null,
   threshold: 0,
-  rootMargin: "0px 0px -80px 0px",
+  rootMargin: "0px",
 };
 
 export function useInfiniteScroll() {

@@ -16,8 +16,10 @@ export default function ItemList() {
 
   useEffect(() => {
     if (loadMore && hasMore) {
-      getItems();
-      setLoadMore(false);
+      setTimeout(() => {
+        getItems();
+        setLoadMore(false);
+      }, 500);
     }
   }, [loadMore]);
 
