@@ -1,13 +1,15 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const options = {
-  root: null, // use the document's viewport as the root
+  root: null,
   threshold: 0,
-  rootMargin: "10px",
+  rootMargin: "0px 0px -80px 0px",
 };
-export function useInfiniteScroll(onLoadMore: any) {
+
+export function useInfiniteScroll() {
   const loaderRef = useRef(null);
   const initialRenderRef = useRef(true);
+  const [loadMore, setLoadMore] = useState<boolean>(false);
 
   const handleIntersection = (entries: IntersectionObserverEntry[]) => {
     const entry = entries[0];
@@ -18,6 +20,7 @@ export function useInfiniteScroll(onLoadMore: any) {
     }
 
     if (entry.isIntersecting) {
+      setLoadMore(true);
       console.log("Load more");
     }
   };
@@ -31,5 +34,5 @@ export function useInfiniteScroll(onLoadMore: any) {
     };
   }, []);
 
-  return loaderRef;
+  return { loaderRef, loadMore, setLoadMore };
 }

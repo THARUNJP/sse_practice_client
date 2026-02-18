@@ -6,22 +6,34 @@ import { useInfiniteScroll } from "../../hooks/infiniteScroll";
 export default function ItemList() {
   const [items, setItems] = useState<Item[]>();
   const [cursor, setCursor] = useState<number>(0);
+  const [hasMore, setHasMore] = useState<boolean>(false);
 
   useEffect(() => {
     getItems();
   }, []);
-  const loaderRef = useInfiniteScroll(getItems);
+
+  const { loaderRef, loadMore, setLoadMore } = useInfiniteScroll();
+
+  useEffect(() => {
+    if (loadMore && hasMore) {
+      getItems();
+      setLoadMore(false);
+    }
+  }, [loadMore]);
+
   async function getItems() {
     try {
       const response = await ItemService.get(cursor, 16);
-      setItems(response?.data);
+      setCursor(response?.nextCursor);
+      setHasMore(response?.hasMore);
+      setItems((prev) => [...(prev ?? []), ...(response?.data ?? [])]);
     } catch (err) {
       console.log("err in the get Items", err);
     }
   }
 
   return (
-    <div className="min-h-screen pb-20">
+    <div className={`min-h-screen ${hasMore ? "pb-20" : null}`}>
       <h1 className="flex justify-center text-red-500 font-bold text-3xl mb-4">
         Item List
       </h1>
@@ -39,13 +51,15 @@ export default function ItemList() {
           ))}
         </div>
       </main>
-      <div
-        ref={loaderRef}
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 m-5"
-      >
-        {Array.from({ length: 8 }).map((_, i) => (
-          <SkeletonCard key={i} />
-        ))}
+
+      <div ref={loaderRef} className="h-1">
+        {hasMore && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 m-5">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
