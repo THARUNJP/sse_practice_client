@@ -5,7 +5,7 @@ import { useInfiniteScroll } from "../../hooks/infiniteScroll";
 
 export default function ItemList() {
   const [items, setItems] = useState<Item[]>();
-  const [cursor,setCursor] = useState<number>(0)
+  const [cursor, setCursor] = useState<number>(0);
 
   useEffect(() => {
     getItems();
@@ -39,7 +39,27 @@ export default function ItemList() {
           ))}
         </div>
       </main>
-      <div ref={loaderRef} className="h-1" />
+      <div
+        ref={loaderRef}
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 m-5"
+      >
+        {Array.from({ length: 8 }).map((_, i) => (
+          <SkeletonCard key={i} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function SkeletonCard() {
+  return (
+    <div className="bg-gray-300 p-6 rounded-md shadow-sm animate-pulse">
+      <div className="h-6 bg-gray-400 rounded mb-3" />
+      <div className="h-4 bg-gray-400 rounded mb-2" />
+      <div className="h-4 bg-gray-400 rounded mb-2" />
+      <div className="h-4 bg-gray-400 rounded mb-2" />
+      <div className="h-4 bg-gray-400 rounded mb-2" />
+      <div className="h-5 bg-gray-400 rounded mt-3 w-1/2" />
     </div>
   );
 }

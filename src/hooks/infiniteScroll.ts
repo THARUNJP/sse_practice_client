@@ -2,15 +2,20 @@ import { useEffect, useRef } from "react";
 
 const options = {
   root: null, // use the document's viewport as the root
-  rootMargin: "0px", // no margin
-  threshold: 0.7, //
+  threshold: 0,
+  rootMargin: "10px",
 };
 export function useInfiniteScroll(onLoadMore: any) {
   const loaderRef = useRef(null);
+  const initialRenderRef = useRef(true);
 
   const handleIntersection = (entries: IntersectionObserverEntry[]) => {
-    console.log(entries, "?inter");
     const entry = entries[0];
+
+    if (initialRenderRef.current) {
+      initialRenderRef.current = false;
+      return;
+    }
 
     if (entry.isIntersecting) {
       console.log("Load more");
